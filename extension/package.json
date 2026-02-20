@@ -81,16 +81,21 @@
       ]
     },
     "configuration": {
-      "title": "AI Code Mentor",
+      "title": "AI Code Mentor Settings",
       "properties": {
+        "aiCodeMentor.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Your AI Code Mentor API key (optional if using public endpoint)"
+        },
         "aiCodeMentor.backendUrl": {
           "type": "string",
-          "default": "http://localhost:3000",
-          "description": "URL of the AI Code Mentor backend server"
+          "default": "https://ai-code-mentor-p61w.onrender.com",
+          "description": "Backend API URL"
         },
         "aiCodeMentor.apiUrl": {
           "type": "string",
-          "default": "https://your-backend-url/api/review",
+          "default": "https://ai-code-mentor-p61w.onrender.com/review",
           "description": "Full API endpoint for code review (overrides backendUrl if set)"
         },
         "aiCodeMentor.timeout": {
@@ -123,13 +128,15 @@
     "typescript": "^5.3.3"
   },
   "contributors": [
-  {
-    "name": "Raj Pardeshi",
-    "url": "https://github.com/rajpardeshi921-oss",
-    "name": "Ankit Kumar Tiwari",
-    "url": "https://github.com/ankitkumartiwari-web"
-  }
-],
+    {
+      "name": "Raj Pardeshi",
+      "url": "https://github.com/rajpardeshi921-oss"
+    },
+    {
+      "name": "Ankit Kumar Tiwari",
+      "url": "https://github.com/ankitkumartiwari-web"
+    }
+  ],
   "dependencies": {
     "axios": "^1.13.5"
   }

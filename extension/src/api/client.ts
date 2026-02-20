@@ -22,13 +22,17 @@ function getOutputChannel(): vscode.OutputChannel {
  */
 export class ApiClient {
   private apiUrl: string;
+    public getBackendUrl(): string {
+      return this.apiUrl;
+    }
   private timeout: number;
   private maxRetries: number;
 
   constructor() {
     // Get API URL from configuration
     const config = vscode.workspace.getConfiguration('aiCodeMentor');
-    this.apiUrl = config.get<string>('apiUrl') || process.env.AI_REVIEW_API || '';
+    // Always use deployed backend unless overridden
+    this.apiUrl = config.get<string>('apiUrl') || 'https://ai-code-mentor-p61w.onrender.com';
     if (!this.apiUrl) {
       throw new Error('API URL is not set. Please configure aiCodeMentor.apiUrl in your VS Code settings.');
     }
@@ -48,9 +52,13 @@ export class ApiClient {
     let lastError: any = null;
     for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
       try {
-        channel.appendLine(`[API Client] Sending code to backend: ${this.apiUrl}`);
+        // Always POST to /review endpoint
+        const url = this.apiUrl.endsWith('/review')
+          ? this.apiUrl
+          : this.apiUrl.replace(/\/$/, '') + '/review';
+        channel.appendLine(`[API Client] Sending code to backend: ${url}`);
         const response = await axios.post<CodeAnalysis>(
-          this.apiUrl,
+          url,
           { code, language },
           {
             timeout: this.timeout,
@@ -64,6 +72,7 @@ export class ApiClient {
       } catch (error) {
         lastError = error;
         channel.appendLine(`[API Client] Error during code review (attempt ${attempt + 1}): ${error instanceof Error ? error.message : String(error)}`);
+        vscode.window.showErrorMessage('AI Code Mentor: Backend request failed. Please check your internet connection or try again later.');
         if (axios.isAxiosError(error)) {
           const axiosError = error as AxiosError<ApiError>;
           if (axiosError.code === 'ECONNREFUSED' || axiosError.code === 'ENOTFOUND' || axiosError.code === 'ECONNABORTED' || axiosError.code === 'ETIMEDOUT') {

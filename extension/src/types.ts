@@ -31,6 +31,8 @@ export interface ParsedReview {
   summary: string;
   suggestions: { suggestion: string; line?: number }[];
   score: number | null;
+  issues?: { issue: string; line?: number }[];
+  security?: { security: string; line?: number }[];
   raw: string;
 }
 

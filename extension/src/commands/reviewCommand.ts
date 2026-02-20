@@ -216,7 +216,7 @@ export class ReviewCommand {
       const isHealthy = await this.apiClient.checkBackendHealth();
       
       if (!isHealthy) {
-        const backendUrl = this.apiClient.getBackendUrl();
+        const backendUrl = this.apiClient.apiUrl;
         vscode.window.setStatusBarMessage(
           `$(warning) Cannot connect to backend at ${backendUrl}`,
           5000
@@ -280,44 +280,13 @@ export class ReviewCommand {
           review: normalizedData.review
         };
 
+
         console.log('[Review Command] Normalized data:', safeData);
         this.logger.info(`Parsed: score=${safeData.score}, bugs=${safeData.bugs.length}, security=${safeData.security.length}, suggestions=${safeData.suggestions.length}`);
-
-          import * as vscode from 'vscode';
         // Parse with universal parser
         if (safeData.review) {
-          // Text-based response
-          function logReviewResult(document: vscode.TextDocument, parsed: ParsedReview) {
-            outputChannel.appendLine(`Analyzed file: ${document.fileName}`);
-            if (typeof parsed.score === 'number') {
-              outputChannel.appendLine(`Score: ${parsed.score}/10`);
-            }
-            if (parsed.summary) {
-              outputChannel.appendLine(`Summary: ${parsed.summary}`);
-            }
-            if (Array.isArray(parsed.suggestions) && parsed.suggestions.length > 0) {
-              outputChannel.appendLine('Suggestions:');
-              for (const s of parsed.suggestions) {
-                outputChannel.appendLine(`  - ${s.suggestion}`);
-              }
-            }
-            if (Array.isArray(parsed.issues) && parsed.issues.length > 0) {
-              outputChannel.appendLine('Issues:');
-              for (const i of parsed.issues) {
-                outputChannel.appendLine(`  - ${i.issue}`);
-              }
-            }
-            if (Array.isArray(parsed.security) && parsed.security.length > 0) {
-              outputChannel.appendLine('Security:');
-              for (const sec of parsed.security) {
-                outputChannel.appendLine(`  - ${sec.security}`);
-              }
-            }
-            outputChannel.appendLine('');
-          }
           parsed = parseReviewText(safeData.review);
         } else {
-          // Structured response
           parsed = parseReviewText(JSON.stringify(safeData));
         }
 
@@ -342,19 +311,26 @@ export class ReviewCommand {
       }
 
       this.reviewStore.set(document.uri, parsed);
-      // Only use suggestions for diagnostics
-      const suggestionDiagnostics = (parsed.suggestions || []).map((s: any) => {
-        const lineIndex = typeof s.line === 'number' ? Math.max(0, s.line - 1) : 0;
-        const range = document.lineAt(Math.min(lineIndex, document.lineCount - 1)).range;
-        const diagnostic = new vscode.Diagnostic(
-          range,
-          s.suggestion,
-          vscode.DiagnosticSeverity.Warning
-        );
-        diagnostic.source = 'AI Code Mentor';
-        return diagnostic;
-      });
       this.diagnostics.update(document, parsed);
+
+      // Output channel display
+      const outputChannel = vscode.window.createOutputChannel('AI Code Mentor');
+      outputChannel.appendLine(`File: ${document.fileName}`);
+      outputChannel.appendLine(`Score: ${parsed.score}/10`);
+      outputChannel.appendLine(`Summary: ${parsed.summary}`);
+      if (Array.isArray(parsed.suggestions) && parsed.suggestions.length > 0) {
+        outputChannel.appendLine('Suggestions:');
+        for (const s of parsed.suggestions) {
+          outputChannel.appendLine(`  - ${s.suggestion}`);
+        }
+      }
+      if (Array.isArray(parsed.security) && parsed.security.length > 0) {
+        outputChannel.appendLine('Security Rating:');
+        for (const sec of parsed.security) {
+          outputChannel.appendLine(`  - ${sec.security}`);
+        }
+      }
+      outputChannel.show(true);
 
       // Logging
       this.logger.logReviewScore(parsed.score);
