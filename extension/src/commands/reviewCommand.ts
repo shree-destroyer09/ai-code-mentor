@@ -216,7 +216,7 @@ export class ReviewCommand {
       const isHealthy = await this.apiClient.checkBackendHealth();
       
       if (!isHealthy) {
-        const backendUrl = this.apiClient.apiUrl;
+        const backendUrl = this.apiClient.getBackendUrl();
         vscode.window.setStatusBarMessage(
           `$(warning) Cannot connect to backend at ${backendUrl}`,
           5000
