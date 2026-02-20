@@ -1,6 +1,11 @@
 
 <p align="center">
-  <img src="extension/icon.png" alt="AI Code Mentor Logo" width="96" />
+  <img 
+    src="https://github.com/user-attachments/assets/4086b752-0c2f-4a31-90ad-d48a3e31288f" 
+    alt="AI Code Mentor Logo" 
+    width="96" 
+    height="96"
+  />
 </p>
 
 # AI Code Mentor
