@@ -520,6 +520,14 @@ Health check endpoint.
 
 ---
 
+## 👥 Contributors
+
+- Shree – Creator & Lead Developer  (https://github.com/shree-destroyer09)
+- Raj Pardesi – Contributor (Feature Testing) (https://github.com/rajpardeshi921-oss)
+- Ankit Kumar Tiwari - Contributor (Backend Development) (https://github.com/ankitkumartiwari-web)
+
+---
+
 ## 🤝 Support
 
 If you encounter issues:
