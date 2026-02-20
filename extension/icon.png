@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="24" fill="#22223B"/>
+  <g>
+    <circle cx="64" cy="64" r="48" fill="#4A4E69"/>
+    <text x="50%" y="54%" text-anchor="middle" fill="#F2E9E4" font-size="38" font-family="Segoe UI, Arial, sans-serif" dy=".3em" font-weight="bold">AI</text>
+    <text x="50%" y="78%" text-anchor="middle" fill="#9A8C98" font-size="18" font-family="Segoe UI, Arial, sans-serif" dy=".3em">Mentor</text>
+  </g>
+</svg>

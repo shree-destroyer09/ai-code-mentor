@@ -8,10 +8,12 @@
     "vscode": "^1.85.0"
   },
   "categories": [
+    "AI",
     "Programming Languages",
     "Linters",
     "Formatters"
   ],
+    "icon": "icon.png",
   "keywords": [
     "ai",
     "code review",
@@ -85,6 +87,11 @@
           "type": "string",
           "default": "http://localhost:3000",
           "description": "URL of the AI Code Mentor backend server"
+        },
+        "aiCodeMentor.apiUrl": {
+          "type": "string",
+          "default": "https://your-backend-url/api/review",
+          "description": "Full API endpoint for code review (overrides backendUrl if set)"
         },
         "aiCodeMentor.timeout": {
           "type": "number",

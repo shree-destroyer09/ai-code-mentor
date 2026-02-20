@@ -14,14 +14,14 @@ const helmet = require('helmet');
 const reviewRoutes = require('./routes/review');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT ? Number(process.env.PORT) : 5000;
 
 // Security middleware
 app.use(helmet());
 
-// CORS configuration - allow requests from VS Code extension
+// CORS configuration - allow requests from frontend and extension
 app.use(cors({
-  origin: '*', // In production, restrict this to specific origins
+  origin: process.env.CORS_ORIGIN || '*',
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -39,11 +39,7 @@ app.use((req, res, next) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    message: 'AI Code Mentor Backend is running',
-    timestamp: new Date().toISOString()
-  });
+  res.json({ status: 'ok' });
 });
 
 // API routes
@@ -66,6 +62,25 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Validate required environment variables
+function validateEnv() {
+  const required = ['OPENROUTER_API_KEY', 'MAX_TOKENS', 'TEMPERATURE', 'NODE_ENV'];
+  let missing = [];
+  for (const key of required) {
+    if (!process.env[key]) missing.push(key);
+  }
+  if (missing.length > 0) {
+    console.error(`\n❌ Missing required environment variables: ${missing.join(', ')}`);
+    console.error('Please set them in your .env or Render dashboard.');
+  }
+}
+
+validateEnv();
+
+// Convert numeric env values
+const maxTokens = Number(process.env.MAX_TOKENS) || 2048;
+const temperature = Number(process.env.TEMPERATURE) || 0.7;
+
 // Start server
 app.listen(PORT, () => {
   console.log('===========================================');
@@ -74,13 +89,14 @@ app.listen(PORT, () => {
   console.log(`🏥 Health check: http://localhost:${PORT}/health`);
   console.log(`📝 Review endpoint: http://localhost:${PORT}/api/review`);
   console.log('===========================================');
-  
-  // Check if API key is configured
   if (!process.env.OPENROUTER_API_KEY) {
-    console.warn('⚠️  WARNING: OPENROUTER_API_KEY not configured in .env file');
+    console.error('❌ OPENROUTER_API_KEY not configured. The app will not work without it.');
   } else {
     console.log('✅ OpenRouter API key configured');
   }
+  console.log(`NODE_ENV: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`MAX_TOKENS: ${maxTokens}`);
+  console.log(`TEMPERATURE: ${temperature}`);
 });
 
 // Graceful shutdown

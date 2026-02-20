@@ -126,7 +126,7 @@ Read active file content
     ↓
 ApiClient.reviewCode()
     ↓
-POST http://localhost:3000/api/review
+POST https://ai-code-mentor-p61w.onrender.com/api/review
     ↓
 Backend routes/review.js
     ↓

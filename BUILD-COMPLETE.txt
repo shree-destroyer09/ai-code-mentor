@@ -13,7 +13,7 @@
    ✓ .gitignore                   # Git rules
 
    🔌 Endpoints:
-   - POST http://localhost:3000/api/review
+   - POST https://ai-code-mentor-p61w.onrender.com/api/review
    - GET  http://localhost:3000/health
    
    🔑 Requires: OPENAI_API_KEY in .env file

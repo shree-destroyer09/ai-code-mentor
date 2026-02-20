@@ -5,7 +5,7 @@ export class Logger {
   private outputChannel: vscode.OutputChannel;
 
   private constructor() {
-    this.outputChannel = vscode.window.createOutputChannel('AI Code Reviewer');
+    this.outputChannel = vscode.window.createOutputChannel('AI Code Mentor');
   }
 
   static getInstance(): Logger {

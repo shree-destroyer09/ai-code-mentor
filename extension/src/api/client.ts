@@ -8,18 +8,32 @@ import * as vscode from 'vscode';
 import axios, { AxiosError } from 'axios';
 import { CodeAnalysis, ApiError } from '../types';
 
+const OUTPUT_CHANNEL_NAME = 'AI Code Mentor';
+let outputChannel: vscode.OutputChannel | undefined;
+function getOutputChannel(): vscode.OutputChannel {
+  if (!outputChannel) {
+    outputChannel = vscode.window.createOutputChannel(OUTPUT_CHANNEL_NAME);
+  }
+  return outputChannel;
+}
+
 /**
  * Client for communicating with the AI Code Mentor backend
  */
 export class ApiClient {
-  private backendUrl: string;
+  private apiUrl: string;
   private timeout: number;
+  private maxRetries: number;
 
   constructor() {
-    // Get backend URL from configuration or use default
+    // Get API URL from configuration
     const config = vscode.workspace.getConfiguration('aiCodeMentor');
-    this.backendUrl = config.get<string>('backendUrl') || 'http://localhost:3000';
+    this.apiUrl = config.get<string>('apiUrl') || process.env.AI_REVIEW_API || '';
+    if (!this.apiUrl) {
+      throw new Error('API URL is not set. Please configure aiCodeMentor.apiUrl in your VS Code settings.');
+    }
     this.timeout = config.get<number>('timeout') || 30000; // 30 seconds default
+    this.maxRetries = 2;
   }
 
   /**
@@ -30,72 +44,62 @@ export class ApiClient {
    * @returns Promise resolving to code analysis result
    */
   async reviewCode(code: string, language?: string): Promise<CodeAnalysis> {
-    try {
-      console.log(`[API Client] Sending code to backend: ${this.backendUrl}/api/review`);
-      
-      const response = await axios.post<CodeAnalysis>(
-        `${this.backendUrl}/api/review`,
-        { code, language },
-        {
-          timeout: this.timeout,
-          headers: {
-            'Content-Type': 'application/json'
+    const channel = getOutputChannel();
+    let lastError: any = null;
+    for (let attempt = 0; attempt <= this.maxRetries; attempt++) {
+      try {
+        channel.appendLine(`[API Client] Sending code to backend: ${this.apiUrl}`);
+        const response = await axios.post<CodeAnalysis>(
+          this.apiUrl,
+          { code, language },
+          {
+            timeout: this.timeout,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        channel.appendLine('[API Client] Successfully received analysis from backend');
+        return response.data;
+      } catch (error) {
+        lastError = error;
+        channel.appendLine(`[API Client] Error during code review (attempt ${attempt + 1}): ${error instanceof Error ? error.message : String(error)}`);
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<ApiError>;
+          if (axiosError.code === 'ECONNREFUSED' || axiosError.code === 'ENOTFOUND' || axiosError.code === 'ECONNABORTED' || axiosError.code === 'ETIMEDOUT') {
+            if (attempt < this.maxRetries) {
+              channel.appendLine(`[API Client] Retrying... (${attempt + 1}/${this.maxRetries})`);
+              await new Promise(res => setTimeout(res, 1000 * (attempt + 1)));
+              continue;
+            } else {
+              throw new Error(`Cannot connect to backend server at ${this.apiUrl}. Please ensure the backend server is running.`);
+            }
+          }
+          if (axiosError.response) {
+            const status = axiosError.response.status;
+            const errorData = axiosError.response.data;
+            if (status === 400) {
+              throw new Error(`Bad request: ${errorData.message || 'Invalid code provided'}`);
+            }
+            if (status === 429) {
+              throw new Error('Rate limit exceeded. Please wait a moment and try again.');
+            }
+            if (status === 500) {
+              throw new Error(`Server error: ${errorData.message || 'The backend encountered an error'}`);
+            }
+            throw new Error(errorData.message || `Server returned error status ${status}`);
           }
         }
-      );
-
-      console.log('[API Client] Successfully received analysis from backend');
-      return response.data;
-
-    } catch (error) {
-      console.error('[API Client] Error during code review:', error);
-      
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ApiError>;
-        
-        // Handle specific error cases
-        if (axiosError.code === 'ECONNREFUSED') {
-          throw new Error(
-            `Cannot connect to backend server at ${this.backendUrl}. ` +
-            'Please ensure the backend server is running.'
-          );
-        }
-
-        if (axiosError.code === 'ETIMEDOUT' || axiosError.code === 'ECONNABORTED') {
-          throw new Error('Request timed out. The code analysis is taking too long.');
-        }
-
-        if (axiosError.response) {
-          const status = axiosError.response.status;
-          const errorData = axiosError.response.data;
-
-          if (status === 400) {
-            throw new Error(`Bad request: ${errorData.message || 'Invalid code provided'}`);
-          }
-
-          if (status === 429) {
-            throw new Error('Rate limit exceeded. Please wait a moment and try again.');
-          }
-
-          if (status === 500) {
-            throw new Error(
-              `Server error: ${errorData.message || 'The backend encountered an error'}`
-            );
-          }
-
-          throw new Error(
-            errorData.message || `Server returned error status ${status}`
-          );
-        }
+        // For other errors, do not retry
+        break;
       }
-
-      // Generic error
-      throw new Error(
-        error instanceof Error 
-          ? error.message 
-          : 'An unexpected error occurred during code analysis'
-      );
     }
+    // Generic error
+    throw new Error(
+      lastError instanceof Error
+        ? lastError.message
+        : 'An unexpected error occurred during code analysis'
+    );
   }
 
   /**
@@ -104,13 +108,14 @@ export class ApiClient {
    * @returns Promise resolving to true if backend is available
    */
   async checkBackendHealth(): Promise<boolean> {
+    const channel = getOutputChannel();
     try {
-      const response = await axios.get(`${this.backendUrl}/health`, {
+      const response = await axios.get(this.apiUrl.replace(/\/api\/review$/, '/health'), {
         timeout: 5000
       });
       return response.status === 200;
     } catch (error) {
-      console.error('[API Client] Backend health check failed:', error);
+      channel.appendLine(`[API Client] Backend health check failed: ${error instanceof Error ? error.message : String(error)}`);
       return false;
     }
   }
@@ -118,14 +123,14 @@ export class ApiClient {
   /**
    * Gets the current backend URL
    */
-  getBackendUrl(): string {
-    return this.backendUrl;
+  getApiUrl(): string {
+    return this.apiUrl;
   }
 
   /**
    * Updates the backend URL (useful for settings changes)
    */
-  setBackendUrl(url: string): void {
-    this.backendUrl = url;
+  setApiUrl(url: string): void {
+    this.apiUrl = url;
   }
 }

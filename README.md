@@ -1,4 +1,21 @@
+
+<p align="center">
+  <img src="extension/icon.png" alt="AI Code Mentor Logo" width="96" />
+</p>
+
 # AI Code Mentor
+
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=aicodementor.ai-code-mentor">
+    <img src="https://img.shields.io/visual-studio-marketplace/v/aicodementor.ai-code-mentor?label=VS%20Code%20Marketplace" alt="VS Code Marketplace" />
+  </a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=aicodementor.ai-code-mentor">
+    <img src="https://img.shields.io/visual-studio-marketplace/d/aicodementor.ai-code-mentor?color=blue" alt="Installs" />
+  </a>
+  <a href="https://github.com/shree-destroyer09/ai-code-mento/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/shree-destroyer09/ai-code-mento" alt="License" />
+  </a>
+</p>
 
 > 🚀 **Production-ready VS Code extension for AI-powered code analysis**
 
@@ -166,7 +183,7 @@ You should see:
 🚀 AI Code Mentor Backend Server Started
 📍 Server running on http://localhost:3000
 🏥 Health check: http://localhost:3000/health
-📝 Review endpoint: http://localhost:3000/api/review
+📝 Review endpoint: https://ai-code-mentor-p61w.onrender.com/api/review
 ===========================================
 ✅ OpenAI API key configured
 ```
