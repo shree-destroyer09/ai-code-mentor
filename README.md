@@ -513,7 +513,9 @@ Health check endpoint.
 ## 📄 ScreenShots
 
 <img width="1457" height="978" alt="image" src="https://github.com/user-attachments/assets/11f4e38b-c7e8-43ff-ade2-b428981f1355" />
-<img width="1457" height="978" alt="image" src="https://github.com/user-attachments/assets/11f4e38b-c7e8-43ff-ade2-b428981f1355" />
+
+
+<img width="1919" height="1074" alt="image" src="https://github.com/user-attachments/assets/50b39e0e-4c72-4240-844c-36528840b8e2" />
 
 
 ---
