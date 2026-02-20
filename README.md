@@ -51,259 +51,105 @@ AI Code Mentor is a comprehensive VS Code extension that analyzes your code usin
 - [Development](#development)
 - [License](#license)
 
----
+# AI Code Mentor
 
-## ✨ Features
-
-### Comprehensive Code Analysis
-
-- **Bug Detection**: Identifies logical errors, edge cases, and potential runtime issues
-- **Security Scanning**: Detects SQL injection, XSS, authentication issues, and more
-- **Performance Insights**: Suggests optimizations for better performance
-- **Readability Improvements**: Recommendations for cleaner, more maintainable code
-- **Educational Feedback**: Beginner-friendly explanations and teaching moments
-- **Code Refactoring**: Shows improved versions with detailed comments
-
-### Developer Experience
-
-- **One-Click Analysis**: Right-click in any file and select "Review Code with AI"
-- **Beautiful UI**: Clean, modern webview panel with organized sections
-- **Fast & Reliable**: Efficient backend processing with timeout protection
-- **Language Support**: Works with JavaScript, Python, TypeScript, Java, and more
+**AI-powered code review extension for Visual Studio Code**
 
 ---
 
-## 📁 Project Structure
+## 🚀 Getting Started
 
-```
-ai-code-reviewer/
-├── backend/                 # Node.js Express backend
-│   ├── server.js           # Main server file
-│   ├── routes/
-│   │   └── review.js       # API routes
-│   ├── services/
-│   │   └── aiService.js    # OpenAI integration
-│   ├── package.json
-│   ├── .env.example
-│   └── .gitignore
-│
-├── extension/               # VS Code extension
-│   ├── src/
-│   │   ├── extension.ts    # Extension entry point
-│   │   ├── types.ts        # TypeScript interfaces
-│   │   ├── api/
-│   │   │   └── client.ts   # Backend API client
-│   │   ├── commands/
-│   │   │   └── reviewCommand.ts  # Command handler
-│   │   └── webview/
-│   │       └── panel.ts    # Webview UI
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── .eslintrc.js
-│
-├── sample-test.js          # Sample file for testing
-└── README.md               # This file
-```
-
----
-
-## 🔧 Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Node.js** (v18.0.0 or higher) - [Download](https://nodejs.org/)
-- **npm** (comes with Node.js)
-- **VS Code** (v1.85.0 or higher) - [Download](https://code.visualstudio.com/)
-- **OpenAI API Key** - [Get one here](https://platform.openai.com/api-keys)
-
----
-
-## 📦 Installation
-
-### Clone or Download the Project
-
-If you haven't already, ensure you have the project files:
+### 1. Clone the Repository
 
 ```bash
-cd C:\Users\Aditya\OneDrive\Desktop\ai-code-reviewer
+git clone https://github.com/shree-destroyer09/ai-code-reviewer.git
+cd ai-code-reviewer
 ```
 
----
-
-## 🚀 Setup Instructions
-
-### 1. Backend Setup
-
-#### Step 1.1: Navigate to Backend Directory
+### 2. Install Dependencies
 
 ```bash
 cd backend
-```
-
-#### Step 1.2: Install Dependencies
-
-```bash
+npm install
+cd ../extension
 npm install
 ```
 
-This will install:
-- `express` - Web framework
-- `cors` - Cross-origin resource sharing
-- `dotenv` - Environment variable management
-- `openai` - OpenAI API client
-- `body-parser` - Request body parsing
-- `helmet` - Security middleware
+### 3. Configure the Backend
 
-#### Step 1.3: Configure Environment Variables
+- Add your OpenAI API key to `backend/.env`:
 
-Create a `.env` file by copying the example:
+  ```env
+  OPENAI_API_KEY=your_openai_api_key_here
+  ```
+- (Optional) Adjust model and server settings in `.env`:
+  - `OPENAI_MODEL=gpt-4-turbo-preview`
+  - `PORT=3000`
 
-```bash
-copy .env.example .env
-```
-
-Edit `.env` and add your OpenAI API key:
-
-```env
-OPENAI_API_KEY=your_actual_openai_api_key_here
-PORT=3000
-NODE_ENV=development
-OPENAI_MODEL=gpt-4-turbo-preview
-MAX_TOKENS=2000
-TEMPERATURE=0.7
-```
-
-⚠️ **Important**: Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys)
-
-#### Step 1.4: Start the Backend Server
+### 4. Start the Backend Server
 
 ```bash
+cd backend
 npm start
 ```
 
-You should see:
+### 5. Launch the Extension in VS Code
 
-```
-===========================================
-🚀 AI Code Mentor Backend Server Started
-📍 Server running on http://localhost:3000
-🏥 Health check: http://localhost:3000/health
-📝 Review endpoint: https://ai-code-mentor-p61w.onrender.com/api/review
-===========================================
-✅ OpenAI API key configured
-```
+- Open the workspace in Visual Studio Code
+- Press `F5` to start the Extension Development Host
 
-✅ **Backend is ready!** Keep this terminal running.
+### 6. Configure Extension Settings
 
----
+- In VS Code, go to `File > Preferences > Settings`
+- Search for "AI Code Mentor"
+- Set your backend URL and API key if needed:
 
-### 2. Extension Setup
+  ```json
+  {
+    "aiCodeMentor.backendUrl": "http://localhost:3000",
+    "aiCodeMentor.apiKey": "your_openai_api_key_here"
+  }
+  ```
 
-Open a **new terminal** window/tab:
+### 7. Run a Code Review
 
-#### Step 2.1: Navigate to Extension Directory
-
-```bash
-cd extension
-```
-
-#### Step 2.2: Install Dependencies
-
-```bash
-npm install
-```
-
-This will install:
-- TypeScript compiler
-- VS Code extension types
-- Axios for HTTP requests
-- ESLint for code quality
-
-#### Step 2.3: Compile TypeScript
-
-```bash
-npm run compile
-```
-
-This compiles the TypeScript files to JavaScript in the `out/` directory.
-
-#### Step 2.4: Launch Extension in VS Code
-
-1. Open the **extension** folder in VS Code:
-   ```bash
-   code .
-   ```
-
-2. Press `F5` or click **Run > Start Debugging**
-
-3. A new VS Code window will open with the extension loaded (Extension Development Host)
-
-✅ **Extension is ready!**
+- Open any code file
+- Run the command: `AI Code Mentor: Review Code`
+- View suggestions and security ratings in the output channel
 
 ---
 
-## 🎯 Usage
+## 📝 Features
 
-### Method 1: Context Menu (Right-Click)
-
-1. Open any code file in the Extension Development Host window
-2. Right-click in the editor
-3. Select **"Review Code with AI"**
-
-### Method 2: Command Palette
-
-1. Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (Mac)
-2. Type "Review Code with AI"
-3. Press Enter
-
-### What Happens Next
-
-1. ⏳ The extension reads your file content
-2. 🔄 Sends code to the backend for AI analysis
-3. 🤖 AI processes the code (takes 5-20 seconds)
-4. 📊 Results appear in a sidebar webview panel
-
-### Understanding the Results
-
-The webview displays:
-
-- **📝 Summary** - Overview of your code
-- **⭐ Rating** - Quality score from 1-10
-- **🐛 Bugs** - Issues found with line numbers and fixes
-- **🔒 Security** - Vulnerabilities with severity levels
-- **💡 Improvements** - Suggestions categorized by type
-- **🎓 Teaching Tips** - Educational insights
-- **✨ Refactored Code** - Improved version with comments
+- Automated AI code review
+- Security and bug detection
+- Suggestions for improvements
+- Refactored code output
+- Teaching tips for learning
+- Customizable backend URL and API key
 
 ---
 
-## 🧪 Testing
+## 📦 Project Structure
 
-### Test with Sample File
-
-A sample test file is included at the root of the project:
-
-1. In the Extension Development Host window, open `sample-test.js`:
-   ```
-   File > Open File > C:\Users\Aditya\OneDrive\Desktop\ai-code-reviewer\sample-test.js
-   ```
-
-2. Right-click in the editor and select **"Review Code with AI"**
-
-3. Wait for analysis (5-20 seconds)
-
-4. View the results in the webview panel
-
-### Expected Results
-
-The sample file contains intentional issues:
-- ❌ Null reference errors
-- ❌ Off-by-one loop error
-- ⚠️ SQL injection vulnerability
-- ⚠️ Complex nested conditions
-- ⚠️ Inefficient O(n²) algorithm
-- ⚠️ Missing error handling
-- ⚠️ Magic numbers
+```
+ai-code-reviewer/
+├── backend/         # Node.js backend server
+│   ├── server.js    # Express server
+│   ├── routes/      # API routes
+│   ├── services/    # AI service logic
+│   ├── prompts/     # Prompt templates
+│   └── package.json # Backend dependencies
+├── extension/       # VS Code extension
+│   ├── src/         # Extension source code
+│   ├── package.json # Extension manifest
+│   └── tsconfig.json# TypeScript config
+├── frontend/        # (optional, for web UI)
+│   ├── App.jsx      # React app entry
+│   └── components/  # UI components
+├── README.md        # Project documentation
+└── sample-test.js   # Example file for testing
+```
 
 ---
 
@@ -321,11 +167,13 @@ Available settings:
 ```json
 {
   "aiCodeMentor.backendUrl": "http://localhost:3000",
+  "aiCodeMentor.apiKey": "your_openai_api_key_here",
   "aiCodeMentor.timeout": 30000
 }
 ```
 
 - **backendUrl**: Backend server URL (default: `http://localhost:3000`)
+- **apiKey**: OpenAI API key (optional, overrides backend .env)
 - **timeout**: Request timeout in milliseconds (default: `30000`)
 
 ### Backend Configuration
@@ -333,23 +181,12 @@ Available settings:
 Edit `backend/.env`:
 
 ```env
-# API Key (Required)
-OPENAI_API_KEY=your_key_here
-
-# Server Settings
+OPENAI_API_KEY=your_openai_api_key_here
 PORT=3000
-NODE_ENV=development
-
-# AI Model Settings
 OPENAI_MODEL=gpt-4-turbo-preview
 MAX_TOKENS=2000
 TEMPERATURE=0.7
 ```
-
-**Available Models**:
-- `gpt-4-turbo-preview` - Best quality (recommended)
-- `gpt-4` - High quality
-- `gpt-3.5-turbo` - Faster, cheaper
 
 ---
 
@@ -357,18 +194,185 @@ TEMPERATURE=0.7
 
 ### Backend Won't Start
 
-**Problem**: Backend fails to start or shows errors
-
-**Solutions**:
-1. Verify Node.js version: `node --version` (should be v18+)
-2. Delete `node_modules` and reinstall: `rm -rf node_modules && npm install`
-3. Check if port 3000 is available: `netstat -ano | findstr :3000`
-4. Verify `.env` file exists and has `OPENAI_API_KEY`
+- Check Node.js version: `node --version` (should be v18+)
+- Delete `node_modules` and reinstall: `rm -rf node_modules && npm install`
+- Check if port 3000 is available: `netstat -ano | findstr :3000`
+- Verify `.env` file exists and has `OPENAI_API_KEY`
 
 ### "Cannot connect to backend" Error
 
-**Problem**: Extension can't reach the backend
+- Ensure backend is running (`npm start` in backend folder)
+- Check backend URL in VS Code settings
+- Test backend manually: Open `http://localhost:3000/health` in browser
+- Check firewall settings
 
+### "Invalid API Key" Error
+
+- Verify API key in `backend/.env` or extension settings
+- Ensure no extra spaces or quotes
+- Generate new key at [OpenAI Platform](https://platform.openai.com/api-keys)
+- Check API key has credits/billing enabled
+
+### Extension Not Loading
+
+- Recompile: `npm run compile`
+- Check for TypeScript errors: `npm run lint`
+- Restart VS Code and press F5 again
+- Check VS Code console for errors (Help > Toggle Developer Tools)
+
+### Request Timeout
+
+- Increase timeout in settings (e.g., 60000 for 60 seconds)
+- Try smaller files first
+- Switch to faster model (`gpt-3.5-turbo`)
+- Check internet connection
+
+---
+
+## 🛠️ Development
+
+### Watch Mode
+
+For active development, use watch mode to auto-compile on changes:
+
+```bash
+cd extension
+npm run watch
+```
+
+### Debugging
+
+- Backend: Add breakpoints in VS Code, launch with F5
+- Extension: Breakpoints work in Extension Development Host
+
+### Making Changes
+
+- Backend: Restart server (Ctrl+C, then `npm start`)
+- Extension: Reload window (Ctrl+R in Extension Development Host)
+
+### Building for Production
+
+To create a `.vsix` package:
+
+```bash
+cd extension
+npm install -g @vscode/vsce
+vsce package
+```
+
+---
+
+## 📝 API Documentation
+
+### Backend Endpoints
+
+#### POST /api/review
+
+Analyzes code and returns structured feedback.
+
+**Request:**
+```json
+{
+  "code": "function example() { ... }",
+  "language": "javascript"
+}
+```
+
+**Response:**
+```json
+{
+  "summary": "This code...",
+  "rating": 7,
+  "bugs": [
+    {
+      "line": 10,
+      "issue": "Potential null reference",
+      "fix": "Add null check"
+    }
+  ],
+  "security": [
+    {
+      "severity": "high",
+      "issue": "SQL injection vulnerability",
+      "recommendation": "Use parameterized queries"
+    }
+  ],
+  "improvements": [
+    {
+      "category": "Performance",
+      "suggestion": "Use Set instead of Array",
+      "impact": "Reduces complexity from O(n²) to O(n)"
+    }
+  ],
+  "teachingTips": [
+    "Always validate user input..."
+  ],
+  "refactoredCode": "// Improved version\nfunction example() { ... }"
+}
+```
+
+#### GET /health
+
+Health check endpoint.
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "message": "AI Code Mentor Backend is running",
+  "timestamp": "2026-02-20T10:30:00.000Z"
+}
+```
+
+---
+
+## 🎓 Learning Resources
+
+- [VS Code Extension API](https://code.visualstudio.com/api)
+- [OpenAI API Documentation](https://platform.openai.com/docs)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Express.js Guide](https://expressjs.com/en/guide/routing.html)
+
+---
+
+## 🖥 Screenshots
+
+<img width="1457" height="978" alt="AI Code Mentor UI" src="https://github.com/user-attachments/assets/11f4e38b-c7e8-43ff-ade2-b428981f1355" />
+
+<img width="1919" height="1074" alt="AI Code Mentor Output" src="https://github.com/user-attachments/assets/50b39e0e-4c72-4240-844c-36528840b8e2" />
+
+---
+
+## 👥 Contributors
+
+- Shree – Creator & Lead Developer ([GitHub](https://github.com/shree-destroyer09))
+- Raj Pardesi – Contributor (Feature Testing) ([GitHub](https://github.com/rajpardeshi921-oss))
+- Ankit Kumar Tiwari – Contributor (Backend Development) ([GitHub](https://github.com/ankitkumartiwari-web))
+
+---
+
+## 🤝 Support
+
+If you encounter issues:
+
+1. Check the [Troubleshooting](#troubleshooting) section
+2. Review backend logs in the terminal
+3. Check VS Code Developer Console (Help > Toggle Developer Tools)
+4. Ensure all prerequisites are installed
+
+---
+
+## 🎉 Success!
+
+You now have a fully functional AI Code Mentor extension!
+
+**Quick Start Checklist:**
+- Backend running on http://localhost:3000
+- Extension loaded in VS Code Development Host
+- OpenAI API key configured
+- Test with `sample-test.js`
+
+**Happy Coding! 🚀**
 **Solutions**:
 1. Ensure backend is running (`npm start` in backend folder)
 2. Check backend URL in VS Code settings
