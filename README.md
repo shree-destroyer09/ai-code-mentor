@@ -2,68 +2,43 @@
 <p align="center">
   <img 
     src="https://github.com/user-attachments/assets/40b47ce3-3188-411b-adfe-d4e5e29c0d81" 
-    alt="AI Code Mentor Logo" 
-    width="96" 
-    height="96"
-  />
-</p>
+    alt="AI Code Reviewer Logo" 
 
-# AI Code Mentor
 
-<p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=aicodementor.ai-code-mentor">
-    <img src="https://img.shields.io/visual-studio-marketplace/v/aicodementor.ai-code-mentor?label=VS%20Code%20Marketplace" alt="VS Code Marketplace" />
-  </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=aicodementor.ai-code-mentor">
-    <img src="https://img.shields.io/visual-studio-marketplace/d/aicodementor.ai-code-mentor?color=blue" alt="Installs" />
-  </a>
-  <a href="https://github.com/shree-destroyer09/ai-code-mento/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/shree-destroyer09/ai-code-mento" alt="License" />
-  </a>
-</p>
+    ## 🚀 Getting Started
 
-> 🚀 **Production-ready VS Code extension for AI-powered code analysis**
+    ### Plug-and-Play Installation
 
-AI Code Mentor is a comprehensive VS Code extension that analyzes your code using artificial intelligence to provide:
+    1. **Download or Clone the Repository:**
+      - `git clone https://github.com/shree-destroyer09/ai-code-reviewer.git`
+      - Or download the ZIP from GitHub and extract.
 
-- 🐛 **Bug Detection** - Identify logical errors and potential crashes
-- 🔒 **Security Analysis** - Find vulnerabilities and security risks
-- 💡 **Code Improvements** - Get suggestions for better code quality
-- 🎓 **Teaching Tips** - Learn best practices and patterns
-- ✨ **Refactored Code** - See improved versions of your code
-- 📊 **Quality Rating** - Get an objective 1-10 code quality score
+    2. **Install the Extension:**
+      - Open the `ai-code-reviewer` folder in Visual Studio Code.
+      - Go to the `extension` folder and run:
+        ```bash
+        npm install
+        npm run compile
+        ```
+      - Press `F5` to launch the Extension Development Host.
 
----
+    3. **Use Instantly:**
+      - Open any code file.
+      - Run `AI Code Mentor: Review Code` from the command palette (`Ctrl+Shift+P`).
+      - Results appear in the output channel.
 
-## 📋 Table of Contents
+    > No backend setup, API key, or terminal commands are required. The extension connects to a public backend automatically.
 
-- [Features](#features)
-- [Project Structure](#project-structure)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Setup Instructions](#setup-instructions)
-  - [Backend Setup](#1-backend-setup)
-  - [Extension Setup](#2-extension-setup)
-- [Usage](#usage)
-- [Testing](#testing)
-- [Configuration](#configuration)
-- [Troubleshooting](#troubleshooting)
-- [Development](#development)
-- [License](#license)
+    ---
 
-# AI Code Mentor
+    ### Advanced (Optional)
 
-**AI-powered code review extension for Visual Studio Code**
+    If you want to use your own OpenRouter API key or customize backend settings:
 
----
+    - Edit `backend/.env` and update `OPENROUTER_API_KEY`.
+    - Adjust model/server settings as needed.
 
-## 🚀 Getting Started
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/shree-destroyer09/ai-code-reviewer.git
-cd ai-code-reviewer
+    ---
 ```
 
 ### 2. Install Dependencies
@@ -75,15 +50,18 @@ cd ../extension
 npm install
 ```
 
-### 3. Configure the Backend
 
-- Add your OpenAI API key to `backend/.env`:
+### 3. Backend Configuration
+
+The backend is pre-configured with a working OpenRouter API key. You do NOT need to add your own key unless you want to use a personal key or increase quota.
+
+- (Optional) To use your own OpenRouter API key, edit `backend/.env`:
 
   ```env
-  OPENAI_API_KEY=your_openai_api_key_here
+  OPENROUTER_API_KEY=your_openrouter_api_key_here
   ```
 - (Optional) Adjust model and server settings in `.env`:
-  - `OPENAI_MODEL=gpt-4-turbo-preview`
+  - `OPENAI_MODEL=gpt-4-turbo-preview` (or your preferred model)
   - `PORT=3000`
 
 ### 4. Start the Backend Server
